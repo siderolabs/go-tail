@@ -7,7 +7,6 @@ package tail
 
 import (
 	"bytes"
-	"fmt"
 	"io"
 )
 
@@ -43,13 +42,9 @@ func SeekLines(r io.ReadSeeker, lines int) error {
 
 		var n int
 
-		n, err = r.Read(buf[:readSize])
+		n, err = io.ReadFull(r, buf[:readSize])
 		if err != nil {
 			return err
-		}
-
-		if int64(n) != readSize {
-			return fmt.Errorf("unexpected short read: %d != %d", n, readSize)
 		}
 
 		if firstRead && buf[n-1] != '\n' {
